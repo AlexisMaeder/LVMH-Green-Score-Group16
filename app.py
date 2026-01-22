@@ -2,13 +2,12 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
-import datetime # Ajout pour la date du rapport
+import datetime 
 
-# --- 1. CONFIGURATION & DESIGN (DARK MODE + CLEAN) ---
 st.set_page_config(page_title="LVMH Green AI", page_icon="🌿", layout="wide")
 
 st.markdown("""
-    <style>
+    <style>. 
     .stApp { background-color: #0E1117; }
     h1, h2, h3, h4, h5, h6, p, li, .stMarkdown { color: #FAFAFA !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
     h1 { font-weight: 300; letter-spacing: 2px; text-transform: uppercase; }
@@ -32,11 +31,9 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. HEADER ---
 st.title("LVMH • AI GREEN SCORE")
 st.markdown("<p style='text-align: center; color: #B0B0B0; margin-bottom: 40px;'>GO / NO-GO Decision Support Tool for AI Projects</p>", unsafe_allow_html=True)
 
-# --- 3. SIDEBAR (CONTROLS) ---
 st.sidebar.header("🎛️ Project Settings")
 st.sidebar.markdown("---")
 
@@ -68,7 +65,6 @@ if region == "France (Low Carbon)":
 elif region == "USA (Mixed Mix)":
     carbon_factor = 1.5
 
-# --- FEEDBACK LVMH : TRANSPARENCE ---
 st.sidebar.markdown("---")
 with st.sidebar.expander("ℹ️ Methodology & Scales"):
     st.markdown("""
@@ -83,7 +79,6 @@ with st.sidebar.expander("ℹ️ Methodology & Scales"):
     - 🔴 **E (NO-GO):** > 100 tons
     """)
 
-# --- 4. ENGINE (CALCULATIONS) ---
 CO2_PER_TOKEN = 0.0031
 WATER_PER_TOKEN = 0.12
 CO2_PER_IMAGE = 4.0 
@@ -106,19 +101,17 @@ total_co2 = (text_co2 + media_co2) * carbon_factor + training_co2
 total_water = text_water + media_water
 km_voiture = total_co2 / 0.12
 
-# --- 5. SCORE LOGIC ---
 if total_co2 < 1000:
-    score, color, msg = "A", "#2E7D32", "GO • SUSTAINABLE PROJECT"     # Dark Green
+    score, color, msg = "A", "#2E7D32", "GO • SUSTAINABLE PROJECT"     
 elif total_co2 < 10000:
-    score, color, msg = "B", "#66BB6A", "GO • MANAGED IMPACT"          # Light Green
+    score, color, msg = "B", "#66BB6A", "GO • MANAGED IMPACT"          
 elif total_co2 < 50000:
-    score, color, msg = "C", "#FFA726", "WARNING • OPTIMIZATION NEEDED" # Orange
+    score, color, msg = "C", "#FFA726", "WARNING • OPTIMIZATION NEEDED" 
 elif total_co2 < 100000:
-    score, color, msg = "D", "#EF5350", "NO-GO • HIGH RISK"            # Light Red
+    score, color, msg = "D", "#EF5350", "NO-GO • HIGH RISK"            
 else:
-    score, color, msg = "E", "#C62828", "NO-GO • CRITICAL"             # Dark Red
+    score, color, msg = "E", "#C62828", "NO-GO • CRITICAL"             
 
-# --- 6. DASHBOARD ---
 col1, col2, col3 = st.columns(3)
 col1.metric("☁️ Carbon Footprint", f"{total_co2:,.0f} kg", "Total Project")
 col2.metric("💧 Water Consumption", f"{total_water:,.0f} L", "Cooling")
@@ -145,8 +138,7 @@ with col_left:
         </div>
     """, unsafe_allow_html=True)
     
-    # --- AJOUT OPERATONNEL : BOUTON EXPORT ---
-    st.markdown("###") # Spacer
+    st.markdown("###") 
     report_text = f"""
     LVMH AI GREEN SCORE - CERTIFICATE
     --------------------------------------------------
@@ -184,7 +176,6 @@ with col_right:
     }
     df_chart = pd.DataFrame(data_dict)
     
-    # Graphique avec une ligne de seuil visuelle (Benchmark)
     base = alt.Chart(df_chart).encode(
         x=alt.X('Impact (kg CO2)', title='CO2 Footprint (kg)'),
         y=alt.Y('Source', sort='-x', title=None)
@@ -194,7 +185,6 @@ with col_right:
         tooltip=['Source', 'Impact (kg CO2)']
     )
     
-    # Configuration finale du graph
     final_chart = (bars).configure_axis(
         labelColor='white', titleColor='white', gridColor='#444444'
     ).configure_view(strokeWidth=0).properties(height=320)
@@ -204,6 +194,5 @@ with col_right:
     if use_media:
         st.caption("⚠️ Note: Multimodal usage (Image/Video) drastically increases footprint.")
 
-# --- FOOTER ---
 st.markdown("<br><br><hr>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #555; font-size: 12px;'>Alberthon 2025 • Prototype developed for LVMH</p>", unsafe_allow_html=True)
